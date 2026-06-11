@@ -1,6 +1,6 @@
 # TaskFlow API
 
-A REST API for managing tasks across teams and projects.
+This is a REST API for managing tasks across teams and projects.
 
 TaskFlow is the backend for a fictional team productivity tool. It lets you create projects, add tasks to them, assign tasks to users, and track work through a simple status workflow. There is no authentication — this is an internal tool API.
 
