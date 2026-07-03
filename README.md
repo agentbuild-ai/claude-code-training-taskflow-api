@@ -16,12 +16,17 @@ TaskFlow is the backend for a fictional team productivity tool. It lets you crea
 | Database | SQLite (via `better-sqlite3`) |
 | Tests | Jest + Supertest |
 | Linter | ESLint |
+| Frontend | Angular 18 (standalone components) + Tailwind CSS |
 
 ---
 
 ## Getting started
 
+### API
+
 ```bash
+cd backend
+
 # Install dependencies
 npm install
 
@@ -40,6 +45,17 @@ npm run build
 
 The server starts on **http://localhost:3000** by default.  
 Set a different port with the `PORT` environment variable.
+CORS is enabled so the frontend (running on a different port) can call the API directly.
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npx ng serve
+```
+
+The frontend starts on **http://localhost:4200** and talks to the API at `http://localhost:3000` (configured in `frontend/src/app/services/api-config.ts`). Run the API (above) alongside it — the UI lists/creates users and projects, and manages tasks on a to-do / in-progress / done board.
 
 ---
 
@@ -198,28 +214,37 @@ All errors return JSON with a consistent shape:
 
 ```
 taskflow-api/
-├── src/
-│   ├── app.ts              # Express app setup and route mounting
-│   ├── server.ts           # Entry point — starts the HTTP server
-│   ├── db.ts               # SQLite connection and schema initialisation
-│   ├── types.ts            # Shared TypeScript interfaces
-│   ├── routes/
-│   │   ├── tasks.ts        # Task endpoints
-│   │   ├── projects.ts     # Project endpoints
-│   │   └── users.ts        # User endpoints
-│   └── middleware/
-│       └── errorHandler.ts # Global error handler
-├── tests/
-│   ├── tasks.test.ts
-│   ├── projects.test.ts
-│   ├── users.test.ts
-│   └── helpers.ts          # Test database setup and teardown
-├── CLAUDE.md               # Agent context (intentionally sparse — see Exercise 2)
-├── WORKSHOP.md             # Exercise guide for participants
-├── README.md               # This file
-├── package.json
-├── tsconfig.json
-└── .eslintrc.json
+├── backend/                  # Express API (own package.json — see backend/CLAUDE.md)
+│   ├── src/
+│   │   ├── app.ts            # Express app setup and route mounting
+│   │   ├── server.ts         # Entry point — starts the HTTP server
+│   │   ├── db.ts             # SQLite connection and schema initialisation
+│   │   ├── types.ts          # Shared TypeScript interfaces
+│   │   ├── routes/
+│   │   │   ├── tasks.ts      # Task endpoints
+│   │   │   ├── projects.ts   # Project endpoints
+│   │   │   └── users.ts      # User endpoints
+│   │   └── middleware/
+│   │       └── errorHandler.ts # Global error handler
+│   ├── tests/
+│   │   ├── tasks.test.ts
+│   │   ├── projects.test.ts
+│   │   ├── users.test.ts
+│   │   └── helpers.ts        # Test database setup and teardown
+│   ├── CLAUDE.md
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── .eslintrc.json
+├── frontend/                 # Angular UI (own package.json — see frontend/CLAUDE.md)
+│   └── src/app/
+│       ├── models/           # TypeScript interfaces mirroring the API types
+│       ├── services/         # HTTP + state services (UsersService, ProjectsService, TasksService)
+│       └── components/       # user-list, project-list, task-board
+├── demo/managed-agents/       # Live-demo harness using the Anthropic Managed Agents API
+├── scripts/
+│   └── reset.sh              # Full reinstall of backend/ deps
+├── CLAUDE.md                 # Orients between backend/ and frontend/
+└── README.md                 # This file
 ```
 
 ---
@@ -237,8 +262,6 @@ This is a workshop project, not a production API. The following are intentional 
 
 ## Workshop context
 
-This repo is the starter project for the **Claude Code workshop**. Some things in it are deliberately incomplete or broken. That's the point.
+This branch (`completed_tasks`) is **not** the workshop starter — it's the base branch used for live demos, including the `demo/managed-agents/` presenter tool that builds features into this repo autonomously in front of an audience. Workshop participants clone the separate `scratch-building` branch instead, which has none of this branch's scaffolding (no `frontend/`, no `demo/`, a flat `src/`/`tests/` layout) and still has its intentionally-planted bugs and unbuilt features intact.
 
-If you're a workshop participant: don't read ahead. Clone the repo, follow the exercises in `WORKSHOP.md`, and let the agent do the exploring.
-
-If you're the facilitator: see the private `taskflow-workshop` repo for the solutions branch and facilitation notes.
+If you're looking for the completed reference solution — bugs fixed, all candidate features implemented — see the `reference-solution` branch.

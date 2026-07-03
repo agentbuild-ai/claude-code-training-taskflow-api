@@ -7,8 +7,6 @@ const router = Router()
 const VALID_STATUSES: TaskStatus[] = ['todo', 'in_progress', 'done']
 
 // GET /tasks — list all tasks
-// BUG #2: Uses INNER JOIN — tasks whose assignee has been deleted are silently
-// dropped from results. Should be LEFT JOIN to preserve unassigned tasks.
 router.get('/', (_req: Request, res: Response) => {
   const tasks = db.prepare(`
     SELECT t.*
@@ -63,9 +61,6 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 })
 
 // PATCH /tasks/:id — update a task
-// BUG #1: The UPDATE statement references the wrong column name in the WHERE
-// clause (uses 'task_id' instead of 'id'), so no row is ever updated.
-// The endpoint returns 200 but the database is unchanged.
 router.patch('/:id', (req: Request, res: Response, next: NextFunction) => {
   const task = db.prepare('SELECT * FROM tasks WHERE id = ?').get(req.params.id)
   if (!task) {
@@ -82,7 +77,6 @@ router.patch('/:id', (req: Request, res: Response, next: NextFunction) => {
     return next(err)
   }
 
-  // BUG #1 is here: WHERE task_id = ? should be WHERE id = ?
   db.prepare(`
     UPDATE tasks
     SET    title       = COALESCE(?, title),

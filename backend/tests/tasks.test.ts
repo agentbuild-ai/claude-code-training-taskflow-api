@@ -2,7 +2,7 @@ import request from 'supertest'
 import app from '../src/app'
 import { resetDb, seedUser, seedProject, seedTask } from './helpers'
 
-beforeAll(() => resetDb())   // BUG #3: should be beforeEach
+beforeAll(() => resetDb())  
 
 let userId: number
 let projectId: number
