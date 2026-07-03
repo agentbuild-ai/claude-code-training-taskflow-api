@@ -3,20 +3,17 @@ import db, { initSchema } from '../src/db'
 // ─────────────────────────────────────────────────────────────────────────────
 // Test helpers
 //
-// BUG #3 (subtle): resetDb() clears data between tests, but the schema is
-// only initialised ONCE at module load time. If tests share the same db
-// instance without resetting, state bleeds between test files when Jest runs
-// them in the same process (which --runInBand does).
-//
-// The fix: call resetDb() in beforeEach, not just beforeAll.
-// Currently tests only call it in beforeAll — so tests within a file are
-// isolated, but state leaks across files.
+// The schema is initialised once at module load time; resetDb() clears data
+// between tests. Call it from beforeEach (not just beforeAll) in every test
+// file — Jest runs all test files in the same process under --runInBand, so
+// a beforeAll-only reset lets state leak across files.
 // ─────────────────────────────────────────────────────────────────────────────
 
 initSchema()
 
 export function resetDb(): void {
   db.exec(`
+    DELETE FROM task_tags;
     DELETE FROM tasks;
     DELETE FROM projects;
     DELETE FROM users;
@@ -44,12 +41,25 @@ export function seedTask(projectId: number, overrides: Record<string, unknown> =
     title: 'Test Task',
     description: null,
     status: 'todo',
+    priority: 'medium',
+    due_date: null,
     assignee_id: null,
   }
   const t = { ...defaults, ...overrides }
   const result = db.prepare(`
-    INSERT INTO tasks (title, description, status, project_id, assignee_id)
-    VALUES (?, ?, ?, ?, ?)
-  `).run(t.title, t.description, t.status, projectId, t.assignee_id)
+    INSERT INTO tasks (title, description, status, priority, due_date, project_id, assignee_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `).run(t.title, t.description, t.status, t.priority, t.due_date, projectId, t.assignee_id)
   return db.prepare('SELECT * FROM tasks WHERE id = ?').get(result.lastInsertRowid)
+}
+
+// tags aren't cleared by resetDb() (they're a reusable dictionary, same as
+// in the app itself), so this is idempotent — reuses the row if it exists.
+export function seedTag(name = 'urgent') {
+  db.prepare('INSERT OR IGNORE INTO tags (name) VALUES (?)').run(name)
+  return db.prepare('SELECT * FROM tags WHERE name = ?').get(name)
+}
+
+export function seedTaskTag(taskId: number, tagId: number): void {
+  db.prepare('INSERT OR IGNORE INTO task_tags (task_id, tag_id) VALUES (?, ?)').run(taskId, tagId)
 }
