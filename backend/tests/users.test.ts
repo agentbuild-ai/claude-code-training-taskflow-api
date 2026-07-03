@@ -2,7 +2,7 @@ import request from 'supertest'
 import app from '../src/app'
 import { resetDb, seedUser } from './helpers'
 
-beforeAll(() => resetDb())   // BUG #3: should be beforeEach
+beforeEach(() => resetDb())
 
 describe('GET /users', () => {
   it('returns an empty array when no users exist', async () => {

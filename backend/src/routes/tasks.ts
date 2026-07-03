@@ -11,7 +11,6 @@ router.get('/', (_req: Request, res: Response) => {
   const tasks = db.prepare(`
     SELECT t.*
     FROM   tasks t
-    JOIN   users u ON t.assignee_id = u.id
     ORDER  BY t.created_at DESC
   `).all()
   res.json(tasks)
@@ -84,7 +83,7 @@ router.patch('/:id', (req: Request, res: Response, next: NextFunction) => {
            status      = COALESCE(?, status),
            assignee_id = COALESCE(?, assignee_id),
            updated_at  = datetime('now')
-    WHERE  task_id = ?
+    WHERE  id = ?
   `).run(
     title ?? null,
     description ?? null,

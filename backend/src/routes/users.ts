@@ -39,12 +39,18 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
     const user = db.prepare('SELECT * FROM users WHERE id = ?').get(result.lastInsertRowid)
     res.status(201).json(user)
   } catch (e: unknown) {
-    if (e instanceof Error && e.message.includes('UNIQUE')) {
+    // Check the SQLite error code rather than `instanceof Error` / message
+    // matching — under Jest's per-file module isolation, better-sqlite3's
+    // SqliteError can come from a different realm than this file's Error
+    // global when the full suite runs together, making `instanceof Error`
+    // unreliable. `.code` is a plain string property, unaffected by that.
+    const code = (e as { code?: string } | null)?.code
+    if (code === 'SQLITE_CONSTRAINT_UNIQUE') {
       const err = new Error('A user with that email already exists') as Error & { status: number }
       err.status = 409
       return next(err)
     }
-    next(e)
+    next(e as Error)
   }
 })
 

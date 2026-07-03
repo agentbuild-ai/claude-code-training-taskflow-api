@@ -2,12 +2,11 @@ import request from 'supertest'
 import app from '../src/app'
 import { resetDb, seedUser, seedProject, seedTask } from './helpers'
 
-beforeAll(() => resetDb())  
-
 let userId: number
 let projectId: number
 
-beforeAll(() => {
+beforeEach(() => {
+  resetDb()
   const user = seedUser('Tester', 'tester@example.com') as { id: number }
   userId = user.id
   const project = seedProject('Test Project', userId) as { id: number }
