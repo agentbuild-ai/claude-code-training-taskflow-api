@@ -1,0 +1,83 @@
+<div class="bg-white rounded-lg shadow p-5">
+  <h2 class="text-lg font-semibold text-slate-800 mb-4">Tasks</h2>
+
+  @if (tasksService.error()) {
+    <p class="text-sm text-red-600 mb-3">{{ tasksService.error() }}</p>
+  }
+
+  <form (ngSubmit)="submit()" class="flex flex-wrap gap-2 mb-5">
+    <input
+      [(ngModel)]="title"
+      name="title"
+      placeholder="Task title"
+      class="flex-1 min-w-[10rem] rounded border border-slate-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+    />
+    <select
+      [(ngModel)]="projectId"
+      name="projectId"
+      class="rounded border border-slate-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+    >
+      <option [ngValue]="null" disabled>Project</option>
+      @for (project of projectsService.projects(); track project.id) {
+        <option [ngValue]="project.id">{{ project.name }}</option>
+      }
+    </select>
+    <select
+      [(ngModel)]="assigneeId"
+      name="assigneeId"
+      class="rounded border border-slate-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+    >
+      <option [ngValue]="null">Unassigned</option>
+      @for (user of usersService.users(); track user.id) {
+        <option [ngValue]="user.id">{{ user.name }}</option>
+      }
+    </select>
+    <button
+      type="submit"
+      class="rounded bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
+    >
+      Add task
+    </button>
+  </form>
+
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    @for (status of statuses; track status) {
+      <div class="bg-slate-50 rounded-lg p-3">
+        <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">
+          {{ columnLabel(status) }} ({{ tasksFor(status).length }})
+        </h3>
+        <div class="flex flex-col gap-2">
+          @for (task of tasksFor(status); track task.id) {
+            <div class="bg-white rounded shadow-sm border border-slate-200 p-3 text-sm">
+              <div class="font-medium text-slate-800">{{ task.title }}</div>
+              <div class="text-xs text-slate-400 mt-1">{{ projectName(task.project_id) }}</div>
+              @if (assigneeName(task.assignee_id); as assignee) {
+                <div class="text-xs text-slate-400">Assigned to {{ assignee }}</div>
+              }
+              <div class="flex items-center justify-between mt-2">
+                <select
+                  [ngModel]="task.status"
+                  (ngModelChange)="tasksService.updateStatus(task.id, $event)"
+                  class="rounded border border-slate-300 px-2 py-1 text-xs"
+                >
+                  @for (s of statuses; track s) {
+                    <option [value]="s">{{ columnLabel(s) }}</option>
+                  }
+                </select>
+                <button
+                  (click)="tasksService.remove(task.id)"
+                  class="text-slate-400 hover:text-red-600 text-xs"
+                  aria-label="Delete task"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          } @empty {
+            <p class="text-xs text-slate-400">Nothing here.</p>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

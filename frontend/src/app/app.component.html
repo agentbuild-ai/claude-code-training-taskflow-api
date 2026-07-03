@@ -1,0 +1,16 @@
+<div class="min-h-screen bg-slate-100">
+  <header class="bg-white border-b border-slate-200">
+    <div class="max-w-5xl mx-auto px-6 py-4">
+      <h1 class="text-xl font-bold text-slate-900">TaskFlow</h1>
+      <p class="text-sm text-slate-500">Manage users, projects, and tasks</p>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 py-6 flex flex-col gap-6">
+    <app-task-board />
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <app-user-list />
+      <app-project-list />
+    </div>
+  </main>
+</div>
