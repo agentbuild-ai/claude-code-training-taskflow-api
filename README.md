@@ -262,6 +262,6 @@ This is a workshop project, not a production API. The following are intentional 
 
 ## Workshop context
 
-This branch (`completed_tasks`) is **not** the workshop starter — it's the base branch used for live demos, including the `demo/managed-agents/` presenter tool that builds features into this repo autonomously in front of an audience. Workshop participants clone the separate `scratch-building` branch instead, which has none of this branch's scaffolding (no `frontend/`, no `demo/`, a flat `src/`/`tests/` layout) and still has its intentionally-planted bugs and unbuilt features intact.
+**This branch (`reference-solution`) is the completed reference solution for the taskflow-api workshop.** All 3 intentionally-planted bugs are fixed, and all 3 candidate features from the workshop exercises — task priority levels, due-date filtering, and tagging — are implemented end to end: backend, frontend, and tests.
 
-If you're looking for the completed reference solution — bugs fixed, all candidate features implemented — see the `reference-solution` branch.
+Workshop participants clone the separate `scratch-building` branch instead, which still has the bugs and none of the features. `completed_tasks` is a third branch — scaffolding only (the `backend`/`frontend` split, the Angular UI, the `demo/managed-agents/` live-demo tool) — used as the base for a live Managed Agents demo, deliberately left with the bugs/features still missing so that demo has real work to show.
