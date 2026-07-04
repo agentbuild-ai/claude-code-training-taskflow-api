@@ -2,7 +2,7 @@
 
 This is a REST API for managing tasks across teams and projects.
 
-TaskFlow is the backend for a fictional team productivity tool. It lets you create projects, add tasks to them, assign tasks to users, and track work through a simple status workflow. There is no authentication — this is an internal tool API.
+TaskFlow is the backend for a fictional team productivity tool. It lets you create projects, add tasks to them, assign tasks to users, and track work through a simple status workflow. There is no authentication — this is an internal tool API. A small Angular frontend consumes the API.
 
 ---
 
@@ -16,12 +16,17 @@ TaskFlow is the backend for a fictional team productivity tool. It lets you crea
 | Database | SQLite (via `better-sqlite3`) |
 | Tests | Jest + Supertest |
 | Linter | ESLint |
+| Frontend | Angular 18 (standalone components) + Tailwind CSS |
 
 ---
 
 ## Getting started
 
+### API
+
 ```bash
+cd backend
+
 # Install dependencies
 npm install
 
@@ -40,6 +45,16 @@ npm run build
 
 The server starts on **http://localhost:3000** by default.  
 Set a different port with the `PORT` environment variable.
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npx ng serve
+```
+
+The frontend starts on **http://localhost:4200** and talks to the API at `http://localhost:3000`.
 
 ---
 
@@ -198,28 +213,35 @@ All errors return JSON with a consistent shape:
 
 ```
 taskflow-api/
-├── src/
-│   ├── app.ts              # Express app setup and route mounting
-│   ├── server.ts           # Entry point — starts the HTTP server
-│   ├── db.ts               # SQLite connection and schema initialisation
-│   ├── types.ts            # Shared TypeScript interfaces
-│   ├── routes/
-│   │   ├── tasks.ts        # Task endpoints
-│   │   ├── projects.ts     # Project endpoints
-│   │   └── users.ts        # User endpoints
-│   └── middleware/
-│       └── errorHandler.ts # Global error handler
-├── tests/
-│   ├── tasks.test.ts
-│   ├── projects.test.ts
-│   ├── users.test.ts
-│   └── helpers.ts          # Test database setup and teardown
-├── CLAUDE.md               # Agent context (intentionally sparse — see Exercise 2)
-├── WORKSHOP.md             # Exercise guide for participants
-├── README.md               # This file
-├── package.json
-├── tsconfig.json
-└── .eslintrc.json
+├── backend/
+│   ├── src/
+│   │   ├── app.ts              # Express app setup and route mounting
+│   │   ├── server.ts           # Entry point — starts the HTTP server
+│   │   ├── db.ts               # SQLite connection and schema initialisation
+│   │   ├── types.ts            # Shared TypeScript interfaces
+│   │   ├── routes/
+│   │   │   ├── tasks.ts        # Task endpoints
+│   │   │   ├── projects.ts     # Project endpoints
+│   │   │   └── users.ts        # User endpoints
+│   │   └── middleware/
+│   │       └── errorHandler.ts # Global error handler
+│   ├── tests/
+│   │   ├── tasks.test.ts
+│   │   ├── projects.test.ts
+│   │   ├── users.test.ts
+│   │   └── helpers.ts          # Test database setup and teardown
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── .eslintrc.json
+├── frontend/                    # Angular UI, own package.json
+│   └── src/app/
+│       ├── models/
+│       ├── services/
+│       └── components/         # user-list, project-list, task-board
+├── labs/                        # Workshop lab guides, one file per lab
+├── CLAUDE.md                    # Agent context (intentionally sparse — see Lab 2)
+├── WORKSHOP.md                  # Day overview, links to labs/
+└── README.md                    # This file
 ```
 
 ---
@@ -239,6 +261,6 @@ This is a workshop project, not a production API. The following are intentional 
 
 This repo is the starter project for the **Claude Code workshop**. Some things in it are deliberately incomplete or broken. That's the point.
 
-If you're a workshop participant: don't read ahead. Clone the repo, follow the exercises in `WORKSHOP.md`, and let the agent do the exploring.
+If you're a workshop participant: don't read ahead. Clone the repo, start with `WORKSHOP.md`, and work through `labs/` in order. Let the agent do the exploring.
 
 If you're the facilitator: see the private `taskflow-workshop` repo for the solutions branch and facilitation notes.

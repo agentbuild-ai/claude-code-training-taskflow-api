@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import { errorHandler } from './middleware/errorHandler'
 import usersRouter from './routes/users'
 import projectsRouter from './routes/projects'
@@ -6,6 +7,7 @@ import tasksRouter from './routes/tasks'
 
 const app = express()
 
+app.use(cors())
 app.use(express.json())
 
 // ── Routes ────────────────────────────────────────────────────────────────────

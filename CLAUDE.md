@@ -1,9 +1,12 @@
 # TaskFlow API
 
-A task management API.
+A task management API, with a backend and a frontend.
 
 ## Running
-npm run dev
+
+Backend: cd backend && npm run dev
+Frontend: cd frontend && npx ng serve
 
 ## Tests
-npm test
+
+cd backend && npm test
