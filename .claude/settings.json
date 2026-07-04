@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "jq -r '.tool_input.file_path // empty' | grep -q 'backend/src/db\\.ts$' && printf '\\n⚠️  backend/src/db.ts was just modified.\\nIf this changed the schema (initSchema): CREATE TABLE IF NOT EXISTS does NOT add new columns/tables to an EXISTING backend/taskflow.db. Delete backend/taskflow.db* (or run scripts/reset.sh) before restarting the dev server -- otherwise you will hit confusing 'no such column' errors against a stale database.\\n' >&2 || true"
+            "command": "jq -r '.tool_input.file_path // empty' | grep -q 'backend/src/db\\.ts$' && printf '\\n⚠️  backend/src/db.ts was just modified.\\nAdded a column? ensureColumn() should backfill it into backend/taskflow.db automatically on next start -- no action needed.\\nRenamed/retyped/dropped a column, or changed a CHECK/FOREIGN KEY on an existing one? ALTER TABLE cannot do that in place -- delete backend/taskflow.db* (or run scripts/reset.sh) before restarting.\\n' >&2 || true"
           }
         ]
       }
