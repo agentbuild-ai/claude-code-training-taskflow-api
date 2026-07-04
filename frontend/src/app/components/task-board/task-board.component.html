@@ -5,7 +5,7 @@
     <p class="text-sm text-red-600 mb-3">{{ tasksService.error() }}</p>
   }
 
-  <form (ngSubmit)="submit()" class="flex flex-wrap gap-2 mb-5">
+  <form (ngSubmit)="submit()" class="flex flex-wrap gap-2 mb-3">
     <input
       [(ngModel)]="title"
       name="title"
@@ -32,6 +32,21 @@
         <option [ngValue]="user.id">{{ user.name }}</option>
       }
     </select>
+    <select
+      [(ngModel)]="priority"
+      name="priority"
+      class="rounded border border-slate-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+    >
+      @for (p of priorities; track p) {
+        <option [value]="p">{{ p }}</option>
+      }
+    </select>
+    <input
+      [(ngModel)]="dueDate"
+      name="dueDate"
+      type="date"
+      class="rounded border border-slate-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+    />
     <button
       type="submit"
       class="rounded bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
@@ -39,6 +54,30 @@
       Add task
     </button>
   </form>
+
+  <div class="flex flex-wrap items-center gap-2 mb-5 text-sm">
+    <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Filter</span>
+    <select
+      [(ngModel)]="filterPriority"
+      (ngModelChange)="applyFilters()"
+      class="rounded border border-slate-300 px-2 py-1 text-xs"
+    >
+      <option value="">All priorities</option>
+      @for (p of priorities; track p) {
+        <option [value]="p">{{ p }}</option>
+      }
+    </select>
+    <label class="flex items-center gap-1 text-xs text-slate-600">
+      <input type="checkbox" [(ngModel)]="filterOverdue" (ngModelChange)="applyFilters()" />
+      Overdue only
+    </label>
+    <input
+      [(ngModel)]="filterTag"
+      (ngModelChange)="applyFilters()"
+      placeholder="Filter by tag"
+      class="rounded border border-slate-300 px-2 py-1 text-xs"
+    />
+  </div>
 
   <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
     @for (status of statuses; track status) {
@@ -49,11 +88,50 @@
         <div class="flex flex-col gap-2">
           @for (task of tasksFor(status); track task.id) {
             <div class="bg-white rounded shadow-sm border border-slate-200 p-3 text-sm">
-              <div class="font-medium text-slate-800">{{ task.title }}</div>
+              <div class="flex items-center justify-between gap-2">
+                <div class="font-medium text-slate-800">{{ task.title }}</div>
+                <span
+                  class="shrink-0 rounded-full px-2 py-0.5 text-[0.65rem] font-medium uppercase"
+                  [class.bg-red-100]="task.priority === 'high'"
+                  [class.text-red-700]="task.priority === 'high'"
+                  [class.bg-amber-100]="task.priority === 'medium'"
+                  [class.text-amber-700]="task.priority === 'medium'"
+                  [class.bg-slate-100]="task.priority === 'low'"
+                  [class.text-slate-600]="task.priority === 'low'"
+                >
+                  {{ task.priority }}
+                </span>
+              </div>
               <div class="text-xs text-slate-400 mt-1">{{ projectName(task.project_id) }}</div>
               @if (assigneeName(task.assignee_id); as assignee) {
                 <div class="text-xs text-slate-400">Assigned to {{ assignee }}</div>
               }
+              @if (dueDateLabel(task); as label) {
+                <div class="text-xs mt-1" [class.text-red-600]="isOverdue(task)" [class.text-slate-400]="!isOverdue(task)">
+                  Due {{ label }}{{ isOverdue(task) ? ' (overdue)' : '' }}
+                </div>
+              }
+
+              <div class="flex flex-wrap items-center gap-1 mt-2">
+                @for (tag of task.tags; track tag) {
+                  <span class="inline-flex items-center gap-1 rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[0.65rem]">
+                    {{ tag }}
+                    <button
+                      (click)="tasksService.removeTag(task.id, tag)"
+                      class="text-indigo-400 hover:text-indigo-700"
+                      [attr.aria-label]="'Remove tag ' + tag"
+                    >×</button>
+                  </span>
+                }
+                <input
+                  [(ngModel)]="newTagInput[task.id]"
+                  [name]="'tag-' + task.id"
+                  placeholder="+ tag"
+                  (keydown.enter)="addTagFor(task.id)"
+                  class="w-16 rounded border border-slate-200 px-1.5 py-0.5 text-[0.65rem] focus:outline-none focus:ring-1 focus:ring-indigo-400"
+                />
+              </div>
+
               <div class="flex items-center justify-between mt-2">
                 <select
                   [ngModel]="task.status"
