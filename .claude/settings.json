@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // empty' | grep -q 'backend/src/db\\.ts$' && printf '\\n⚠️  backend/src/db.ts was just modified.\\nIf this changed the schema (initSchema): CREATE TABLE IF NOT EXISTS does NOT add new columns/tables to an EXISTING backend/taskflow.db. Delete backend/taskflow.db* (or run scripts/reset.sh) before restarting the dev server -- otherwise you will hit confusing 'no such column' errors against a stale database.\\n' >&2 || true"
+          }
+        ]
+      }
+    ]
+  }
+}

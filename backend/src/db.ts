@@ -23,7 +23,22 @@ if (DB_PATH !== ':memory:') {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Schema
+//
+// There's no migration framework here — CREATE TABLE IF NOT EXISTS defines
+// the shape for a brand-new database. For columns added to an existing table
+// after its initial release (like `priority`/`due_date` below), ensureColumn
+// backfills them on top of a pre-existing table so an old on-disk
+// taskflow.db self-upgrades instead of erroring with "no such column".
+// This only handles additive changes (new columns) — a column type change,
+// rename, or removal still needs a real migration.
 // ─────────────────────────────────────────────────────────────────────────────
+
+function ensureColumn(table: string, column: string, definition: string): void {
+  const columns = db.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[]
+  if (!columns.some((c) => c.name === column)) {
+    db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`)
+  }
+}
 
 export function initSchema(): void {
   db.exec(`
@@ -67,6 +82,12 @@ export function initSchema(): void {
       PRIMARY KEY (task_id, tag_id)
     );
   `)
+
+  // Backfill columns added after the initial release, for pre-existing
+  // on-disk databases that predate them (no-op on a freshly created table,
+  // since CREATE TABLE above already includes these columns).
+  ensureColumn('tasks', 'priority', "TEXT NOT NULL DEFAULT 'medium' CHECK(priority IN ('low','medium','high'))")
+  ensureColumn('tasks', 'due_date', 'TEXT')
 }
 
 export default db

@@ -15,6 +15,8 @@ There is no root-level `package.json` — each app has its own dependencies, scr
 
 This is a workshop/demo project, not a production service — things like auth, pagination, and heavy input sanitization are intentionally out of scope in the backend rather than oversights.
 
+**This branch (`reference-solution`) is the completed reference solution for the taskflow-api workshop.** It's built from `completed_tasks` with all 3 intentionally-planted bugs fixed and all 3 candidate features (task priority levels, due-date filtering, and tagging) implemented end-to-end — backend, frontend, and tests. Workshop participants clone the separate `scratch-building` branch instead, which still has the bugs and none of the features; `completed_tasks` is a different branch again — scaffolding-only, used as the base for the `demo/managed-agents/` live-demo tool, deliberately still missing these bugs/features so that demo has real work to show.
+
 ## Running both together
 
 ```bash
