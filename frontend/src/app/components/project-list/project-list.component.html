@@ -1,0 +1,52 @@
+<div class="bg-white rounded-lg shadow p-5">
+  <h2 class="text-lg font-semibold text-slate-800 mb-4">Projects</h2>
+
+  @if (projectsService.error()) {
+    <p class="text-sm text-red-600 mb-3">{{ projectsService.error() }}</p>
+  }
+
+  <form (ngSubmit)="submit()" class="flex flex-wrap gap-2 mb-4">
+    <input
+      [(ngModel)]="name"
+      name="name"
+      placeholder="Project name"
+      class="flex-1 min-w-[8rem] rounded border border-slate-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+    />
+    <select
+      [(ngModel)]="ownerId"
+      name="ownerId"
+      class="rounded border border-slate-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+    >
+      <option [ngValue]="null" disabled>Owner</option>
+      @for (user of usersService.users(); track user.id) {
+        <option [ngValue]="user.id">{{ user.name }}</option>
+      }
+    </select>
+    <button
+      type="submit"
+      class="rounded bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
+    >
+      Add project
+    </button>
+  </form>
+
+  <ul class="divide-y divide-slate-100">
+    @for (project of projectsService.projects(); track project.id) {
+      <li class="flex items-center justify-between py-2 text-sm">
+        <div>
+          <span class="font-medium text-slate-800">{{ project.name }}</span>
+          <span class="text-slate-400"> — owned by {{ ownerName(project.owner_id) }}</span>
+        </div>
+        <button
+          (click)="projectsService.remove(project.id)"
+          class="text-slate-400 hover:text-red-600"
+          aria-label="Delete project"
+        >
+          Delete
+        </button>
+      </li>
+    } @empty {
+      <li class="py-2 text-sm text-slate-400">No projects yet.</li>
+    }
+  </ul>
+</div>
