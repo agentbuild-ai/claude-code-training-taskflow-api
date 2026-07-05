@@ -10,6 +10,7 @@ Work through the labs in order — each one builds on artifacts from the last (y
 
 | Time | Lab |
 |---|---|
+| before the day | [Lab 0 — Pre-req installation](labs/00-pre-req-installation.md) |
 | 30 min | [Lab 1 — Read the room](labs/01-read-the-room.md) |
 | 35 min | [Lab 2 — Build your CLAUDE.md](labs/02-build-your-claude-md.md) |
 | 35 min | [Lab 3 — Debug the test suite](labs/03-debug-the-test-suite.md) |
