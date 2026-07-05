@@ -2,6 +2,9 @@
 
 The root `CLAUDE.md` in this repo is intentionally sparse. Run a task before changing anything, and notice the assumptions the agent makes without it.
 
+
+-----What task we will be running to check with the missing configuration of CLAUDE.md that task is not performed correctly? 
+
 ---
 
 ## Core
