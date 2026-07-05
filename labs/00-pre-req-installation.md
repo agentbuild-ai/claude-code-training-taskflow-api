@@ -20,7 +20,7 @@ If anything below doesn't work, don't wait until the day to find out — ask in 
 ## Step 1 — Clone the repo
 
 ```bash
-git clone <the repo URL your facilitator shared with you>
+git clone https://github.com/agentbuild-ai/claude-code-training-taskflow-api.git
 cd taskflow-api
 ```
 
@@ -63,6 +63,9 @@ Make sure you (or your organization) actually have an active Claude Code plan or
 ---
 
 ## Step 4 — Verify everything
+
+> [!CAUTION]
+> **Run this in a separate/new terminal window — not the one where you ran the setup script or started a dev server.**
 
 **macOS:**
 ```bash
