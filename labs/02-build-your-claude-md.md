@@ -2,8 +2,7 @@
 
 The root `CLAUDE.md` in this repo is intentionally sparse. Run a task before changing anything, and notice the assumptions the agent makes without it.
 
-
------What task we will be running to check with the missing configuration of CLAUDE.md that task is not performed correctly? 
+**The task:** ask Claude to add `PATCH /projects/:id` (rename a project) to the backend. Don't tell it anything else — just the endpoint and what it should do. Note what it gets wrong or has to guess at (error-handling style, status codes, whether it writes a test, whether it matches the existing `tasks.ts` PATCH pattern).
 
 ---
 
