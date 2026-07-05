@@ -22,6 +22,34 @@ TaskFlow is the backend for a fictional team productivity tool. It lets you crea
 
 ## Getting started
 
+### Quick setup (recommended)
+
+Installs git/Node/jq if missing and runs `npm install` for every app below. Safe to re-run.
+
+```bash
+# macOS
+bash scripts/setup-mac.sh
+
+# Windows (in a normal PowerShell window)
+powershell -ExecutionPolicy Bypass -File scripts\setup-windows.ps1
+```
+
+Then confirm everything's actually working (read-only, doesn't install anything):
+
+```bash
+# macOS
+bash scripts/verify-setup-mac.sh
+
+# Windows
+powershell -ExecutionPolicy Bypass -File scripts\verify-setup-windows.ps1
+```
+
+See `labs/00-pre-req-installation.md` for the full step-by-step, including installing Claude Code itself and troubleshooting.
+
+### Manual setup
+
+If you'd rather not run a script, or it doesn't work for you:
+
 ### API
 
 ```bash
