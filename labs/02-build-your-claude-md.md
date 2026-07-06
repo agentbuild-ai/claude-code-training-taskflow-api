@@ -4,6 +4,8 @@ The root `CLAUDE.md` in this repo is intentionally sparse. Run a task before cha
 
 **The task:** ask Claude to add `PATCH /projects/:id` (rename a project) to the backend. Don't tell it anything else — just the endpoint and what it should do. Note what it gets wrong or has to guess at (error-handling style, status codes, whether it writes a test, whether it matches the existing `tasks.ts` PATCH pattern).
 
+**Run command** "Add a PATCH /projects/:id endpoint to the backend that lets you rename a project."
+
 ---
 
 ## Core

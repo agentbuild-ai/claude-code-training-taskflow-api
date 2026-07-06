@@ -41,6 +41,10 @@ export interface CreateProjectBody {
   owner_id: number
 }
 
+export interface UpdateProjectBody {
+  name?: string
+}
+
 export interface CreateTaskBody {
   title: string
   description?: string

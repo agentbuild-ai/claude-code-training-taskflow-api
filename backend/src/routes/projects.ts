@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express'
 import db from '../db'
-import { CreateProjectBody } from '../types'
+import { CreateProjectBody, UpdateProjectBody } from '../types'
 
 const router = Router()
 
@@ -44,6 +44,29 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 
   const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(result.lastInsertRowid)
   res.status(201).json(project)
+})
+
+// PATCH /projects/:id — rename a project
+router.patch('/:id', (req: Request, res: Response, next: NextFunction) => {
+  const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id)
+  if (!project) {
+    const err = new Error('Project not found') as Error & { status: number }
+    err.status = 404
+    return next(err)
+  }
+
+  const { name } = req.body as UpdateProjectBody
+
+  if (!name) {
+    const err = new Error('name is required') as Error & { status: number }
+    err.status = 400
+    return next(err)
+  }
+
+  db.prepare('UPDATE projects SET name = ? WHERE id = ?').run(name, req.params.id)
+
+  const updated = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id)
+  res.json(updated)
 })
 
 // DELETE /projects/:id — delete a project (cascades to tasks)

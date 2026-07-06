@@ -54,6 +54,28 @@ describe('GET /projects/:id', () => {
   })
 })
 
+describe('PATCH /projects/:id', () => {
+  it('renames the project and returns the updated project', async () => {
+    const project = seedProject('Old Name', userId) as { id: number }
+    const res = await request(app)
+      .patch(`/projects/${project.id}`)
+      .send({ name: 'New Name' })
+    expect(res.status).toBe(200)
+    expect(res.body).toMatchObject({ id: project.id, name: 'New Name' })
+  })
+
+  it('returns 400 when name is missing', async () => {
+    const project = seedProject('Keep Name', userId) as { id: number }
+    const res = await request(app).patch(`/projects/${project.id}`).send({})
+    expect(res.status).toBe(400)
+  })
+
+  it('returns 404 for unknown id', async () => {
+    const res = await request(app).patch('/projects/99999').send({ name: 'X' })
+    expect(res.status).toBe(404)
+  })
+})
+
 describe('DELETE /projects/:id', () => {
   it('deletes the project and returns 204', async () => {
     const project = seedProject('ToDelete', userId) as { id: number }
