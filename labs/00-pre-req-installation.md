@@ -8,8 +8,6 @@ If anything below doesn't work, don't wait until the day to find out — ask in 
 
 ## What you'll need
 
-- A **GitHub account**, with git configured to clone over HTTPS or SSH
-- **git**
 - **Node.js** — major version 18, 20, or 22 (these are the versions Angular 18 actually supports; odd-numbered majors like 19 or 21 won't work correctly)
 - A code editor — **VS Code** is recommended, since Claude Code's IDE integration is built for it
 - **Claude Code**, installed and signed in
@@ -20,14 +18,8 @@ If anything below doesn't work, don't wait until the day to find out — ask in 
 ## Step 1 — Clone the repo
 
 ```bash
-git clone https://github.com/agentbuild-ai/claude-code-training-taskflow-api.git
-cd taskflow-api
-```
-
-Check out the branch your facilitator told you to use (most likely `scratch-building` or `workshop-participants`):
-
-```bash
-git checkout scratch-building
+git clone https://github.com/agentbuild-ai/claude-code-training-taskflow.git
+cd claude-code-training-taskflow
 ```
 
 ---
@@ -45,6 +37,14 @@ bash scripts/setup-mac.sh
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\setup-windows.ps1
 ```
+
+> **Windows — received the scripts as a zip attachment?**
+> Gmail blocks `.ps1` files for security reasons, so they may have been sent as a `.zip` with files renamed to `.ps1.txt`.
+> 1. Unzip the archive into the `scripts\` folder of the repo
+> 2. Rename each file to remove the `.txt` extension: `setup-windows.ps1.txt` → `setup-windows.ps1`, and `verify-setup-windows.ps1.txt` → `verify-setup-windows.ps1`
+> 3. Then run the command above as normal
+>
+> If you cloned the repo above, the scripts are already in `scripts\` — skip this entirely.
 
 ---
 
@@ -65,7 +65,7 @@ Make sure you (or your organization) actually have an active Claude Code plan or
 ## Step 4 — Verify everything
 
 > [!CAUTION]
-> **Run this in a separate/new terminal window — not the one where you ran the setup script or started a dev server.**
+> **Run this in a separate/new terminal window — not the one where you ran the setup script.**
 
 **macOS:**
 ```bash
@@ -91,23 +91,16 @@ claude --version
 
 Install manually instead:
 
-1. **git** — [git-scm.com](https://git-scm.com)
-2. **Node.js 20 LTS** — [nodejs.org](https://nodejs.org) (pick the LTS installer for your OS)
-3. Install each app's dependencies by hand:
-   ```bash
-   cd backend && npm install && cd ..
-   cd frontend && npm install && cd ..
-   ```
-   (Only run the `demo/managed-agents` one if that folder actually exists on your branch — it's facilitator-only tooling, not on the participant branches.)
+1. **Node.js 20 LTS** — [nodejs.org](https://nodejs.org) (pick the LTS installer for your OS)
+2. **git** — [git-scm.com](https://git-scm.com)
 
 ---
 
 ## Troubleshooting
 
 - **`verify-setup` reports the wrong Node major version** — reinstall Node 20 LTS from nodejs.org, then close and reopen your terminal completely (a new install doesn't always take effect in an already-open shell).
-- **`npm install` fails partway through** — re-run it; `npm install` is safe to run repeatedly. If it keeps failing, delete that app's `node_modules` folder and try again.
 - **`claude --version` doesn't work after installing** — close and reopen your terminal, then try again. If it still doesn't work, check that npm's global bin directory is on your `PATH`.
-- **`git clone` fails with a permission error** — you likely need to set up SSH keys or a personal access token with GitHub first; see GitHub's own documentation for your platform.
+- **`git clone` fails with a permission error** — the repo is public, so this is usually a network issue. Try `git clone https://github.com/agentbuild-ai/claude-code-training-taskflow.git` explicitly with HTTPS.
 
 ---
 
@@ -115,4 +108,4 @@ Install manually instead:
 
 - `scripts/verify-setup-mac.sh` (or the Windows equivalent) prints `All checks passed.`
 - `claude --version` prints a version number
-- You can open this repo in your editor and see the `backend/` and `frontend/` folders
+- You can open the repo in VS Code

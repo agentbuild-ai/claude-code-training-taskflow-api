@@ -30,13 +30,6 @@ Write-Host ""
 Write-Host "TaskFlow -- Windows setup verification" -ForegroundColor White
 Write-Host "──────────────────────────────"
 
-# ── Repo root sanity check ──────────────────────────────────────────────────
-if (-not (Test-Path "README.md") -or -not (Test-Path "backend")) {
-    Write-Host "This doesn't look like the taskflow-api repo root." -ForegroundColor Red
-    Write-Host "  cd into the repo root (the folder with README.md and backend\) and try again."
-    exit 1
-}
-
 # ── Toolchain ────────────────────────────────────────────────────────────────
 Write-Host ""
 Write-Host "Toolchain"

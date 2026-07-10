@@ -32,13 +32,6 @@ echo ""
 echo -e "${BOLD}TaskFlow — macOS setup verification${RESET}"
 echo "──────────────────────────────"
 
-# ── Repo root sanity check ──────────────────────────────────────────────────
-if [[ ! -f "README.md" ]] || [[ ! -d "backend" ]]; then
-  echo -e "${RED}✗ This doesn't look like the taskflow-api repo root.${RESET}"
-  echo "  cd into the repo root (the folder with README.md and backend/) and try again."
-  exit 1
-fi
-
 # ── Toolchain ────────────────────────────────────────────────────────────────
 echo ""
 echo "Toolchain"
